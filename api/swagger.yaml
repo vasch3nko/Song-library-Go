@@ -1,0 +1,191 @@
+openapi: 3.0.3
+info:
+  title: Song library API
+  version: 1.0.0
+paths:
+  /songs:
+    get:
+      summary: Get a list of songs
+      parameters:
+        - name: page
+          in: query
+          description: Page number
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+        - name: limit
+          in: query
+          description: Number of records per page
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+      requestBody:
+        description: Song filtering object
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: integer
+                  minimum: 1
+                song:
+                  type: string
+                group:
+                  type: string
+                text:
+                  type: string
+                link:
+                  type: string
+                releaseDate:
+                  type: string
+                  format: date
+      responses:
+        '200':
+          description: Successfully got songs
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                      minimum: 1
+                    song:
+                      type: string
+                    group:
+                      type: string
+                    text:
+                      type: string
+                    link:
+                      type: string
+                    releaseDate:
+                      type: string
+                      format: date
+        '400':
+          description: Bad request
+        '500':
+          description: Internal server error
+    post:
+      summary: Creating a new song
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                song:
+                  type: string
+                group:
+                  type: string
+              required:
+                - song
+                - group
+      responses:
+        '201':
+          description: Song created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+        '400':
+          description: Bad request
+        '500':
+          description: Internal server error
+  /songs/{id}:
+    get:
+      summary: Get song text by ID
+      parameters:
+        - name: id
+          in: path
+          description: Song ID
+          required: true
+          schema:
+            type: integer
+            minimum: 1
+        - name: page
+          in: query
+          description: Verse
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+      responses:
+        '200':
+          description: Successfully got text
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  page:
+                    type: integer
+                  verse:
+                    type: string
+        '400':
+          description: Bad request
+        '500':
+          description: Internal server error
+    patch:
+      summary: Update song info
+      parameters:
+        - name: id
+          in: path
+          description: Song ID
+          required: true
+          schema:
+            type: integer
+            minimum: 1
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                song:
+                  type: string
+                group:
+                  type: string
+                text:
+                  type: string
+                link:
+                  type: string
+                releaseDate:
+                  type: string
+                  format: date
+      responses:
+        '204':
+          description: Successfully updated
+        '400':
+          description: Bad request
+        '500':
+          description: Internal server error
+    delete:
+      summary: Deleting a song
+      parameters:
+        - name: id
+          in: path
+          description: Song ID
+          required: true
+          schema:
+            type: integer
+            minimum: 1
+      responses:
+        '204':
+          description: Successfully deleted
+        '400':
+          description: Bad request
+        '500':
+          description: Internal server error
